@@ -1,9 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:provider/provider.dart';
+import 'package:quran_api/providers/surah_provider.dart';
+import 'package:quran_api/views/widgets/surah_tile_widget.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  @override
+  void initState() {
+    // TODO: implement initState
+
+    SurahProvider surahProvider =
+        Provider.of<SurahProvider>(context, listen: false);
+    surahProvider.getdataSurah();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -15,112 +32,16 @@ class HomePage extends StatelessWidget {
         elevation: 0,
         centerTitle: true,
       ),
-      body: ListView(
-        children: const [
-          SurahTileWidget(
-            namaSurah: "al-Fatihah",
-            tempatTurun: "Makkiyah",
-            jumlahAyat: 7,
-            nomorSurah: 1,
-          ),
-          SurahTileWidget(
-            namaSurah: "al-baqarah",
-            tempatTurun: "Madaniyah",
-            jumlahAyat: 286,
-            nomorSurah: 2,
-          ),
-          SurahTileWidget(
-            namaSurah: "ali Imran",
-            tempatTurun: "Madaniyah",
-            jumlahAyat: 200,
-            nomorSurah: 3,
-          ),
-          SurahTileWidget(
-            namaSurah: "an-Nisa'a",
-            tempatTurun: "Madaniyah",
-            jumlahAyat: 176,
-            nomorSurah: 4,
-          ),
-          SurahTileWidget(
-            namaSurah: "al-Maidah",
-            tempatTurun: "Madaniyah",
-            jumlahAyat: 120,
-            nomorSurah: 5,
-          ),
-          SurahTileWidget(
-            namaSurah: "al-an'am",
-            tempatTurun: "Makkiyah",
-            jumlahAyat: 165,
-            nomorSurah: 6,
-          ),
-          SurahTileWidget(
-            namaSurah: "al-a'raf",
-            tempatTurun: "Makkiyah",
-            jumlahAyat: 206,
-            nomorSurah: 7,
-          ),
-          SurahTileWidget(
-            namaSurah: "al-anfal",
-            tempatTurun: "Madaniyah",
-            jumlahAyat: 75,
-            nomorSurah: 8,
-          ),
-          SurahTileWidget(
-            namaSurah: "al-a'raf",
-            tempatTurun: "Makkiyah",
-            jumlahAyat: 206,
-            nomorSurah: 9,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class SurahTileWidget extends StatelessWidget {
-  final String namaSurah;
-  final String tempatTurun;
-  final int jumlahAyat;
-  final int nomorSurah;
-
-  const SurahTileWidget(
-      {Key? key,
-      required this.namaSurah,
-      required this.tempatTurun,
-      required this.jumlahAyat,
-      required this.nomorSurah})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(24),
-      child: Row(
-        // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Container(
-            height: 30,
-            width: 30,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(100),
-                color: Theme.of(context).colorScheme.primary),
-            child: Text("$nomorSurah"),
-          ),
-          const SizedBox(
-            width: 24,
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                namaSurah,
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-              Text("$jumlahAyat ayat - $tempatTurun"),
-            ],
-          ),
-        ],
+      body: Consumer<SurahProvider>(
+        builder: ((context, child, _) => ListView.builder(
+              itemCount: child.dataSurah.length,
+              itemBuilder: ((context, index) => SurahTileWidget(
+                    namaSurah: child.dataSurah[index].namaSurah,
+                    tempatTurun: child.dataSurah[index].tempatTurun,
+                    jumlahAyat: child.dataSurah[index].jumlahAyat,
+                    nomorSurah: child.dataSurah[index].noSurah,
+                  )),
+            )),
       ),
     );
   }
