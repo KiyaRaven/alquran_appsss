@@ -1,7 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:quran_api/data/models/surah_model.dart';
-
-import 'package:quran_api/data/models/surah_model.dart';
 import 'package:quran_api/data/repositories/surah_repository.dart';
 
 class SurahProvider extends ChangeNotifier {
@@ -15,6 +13,11 @@ class SurahProvider extends ChangeNotifier {
     var data = await surahRepository.getListSurah();
     dataSurah = data;
 
+    notifyListeners();
+  }
+
+  deleteDataSurah() {
+    dataSurah = [];
     notifyListeners();
   }
 }

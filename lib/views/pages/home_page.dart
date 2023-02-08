@@ -15,8 +15,10 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   void initState() {
+    super.initState();
     // TODO: implement initState
 
+// cara memanggil provider dengan cara pertama
     SurahProvider surahProvider =
         Provider.of<SurahProvider>(context, listen: false);
     surahProvider.getdataSurah();
@@ -31,16 +33,33 @@ class _HomePageState extends State<HomePage> {
         ),
         elevation: 0,
         centerTitle: true,
+        actions: [
+          IconButton(
+            onPressed: () {
+              SurahProvider surahProvider =
+                  Provider.of<SurahProvider>(context, listen: false);
+              surahProvider.deleteDataSurah();
+            },
+            icon: const Icon(Icons.delete),
+          ),
+        ],
       ),
+      // cara memanggil provider dengan cara kedua
+
       body: Consumer<SurahProvider>(
-        builder: ((context, child, _) => ListView.builder(
-              itemCount: child.dataSurah.length,
-              itemBuilder: ((context, index) => SurahTileWidget(
-                    namaSurah: child.dataSurah[index].namaSurah,
-                    tempatTurun: child.dataSurah[index].tempatTurun,
-                    jumlahAyat: child.dataSurah[index].jumlahAyat,
-                    nomorSurah: child.dataSurah[index].noSurah,
-                  )),
+        builder: ((context, provider, _) => RefreshIndicator(
+              onRefresh: () async {
+                await provider.getdataSurah();
+              },
+              child: ListView.builder(
+                itemCount: provider.dataSurah.length,
+                itemBuilder: ((context, index) => SurahTileWidget(
+                      namaSurah: provider.dataSurah[index].namaSurah,
+                      tempatTurun: provider.dataSurah[index].tempatTurun,
+                      jumlahAyat: provider.dataSurah[index].jumlahAyat,
+                      nomorSurah: provider.dataSurah[index].noSurah,
+                    )),
+              ),
             )),
       ),
     );
